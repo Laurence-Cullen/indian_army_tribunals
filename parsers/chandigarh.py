@@ -82,7 +82,7 @@ def parse_row(row_html: str):
 
 def main():
     # Load Chandigarh.html into a string
-    with open('web_pages/Chandigarh.html', 'r') as f:
+    with open('../web_pages/Chandigarh.html', 'r') as f:
         html_doc = f.read()
 
     soup = BeautifulSoup(html_doc, 'html.parser')
@@ -105,7 +105,7 @@ def main():
     print(df)
 
     # Save to CSV
-    df.to_csv('Chandigarh.csv', index=False)
+    df.to_csv('structured_judgements/Chandigarh.csv', index=False)
 
 
 if __name__ == '__main__':
