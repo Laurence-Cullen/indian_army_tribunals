@@ -54,7 +54,8 @@ def extract_pdf_url(row_html: str):
 
 
 def extract_judges(row_html: str):
-    regex = r'<span style="color:blue">([^<]+)<\/span>\s*&amp;\s*<span style="color:blue">([^<]+)<\/span>'
+    regex = r'Judgement given by:\s*<span style="color:blue">([\w\s.,\'’()]+)</span>\s*&amp;\s*<span style="color:blue">([\w\s.,\'’()]+)</span>'
+
     match = re.search(regex, row_html)
     if not match:
         raise ValueError('Could not parse judges from row: {}'.format(row_html))
@@ -70,19 +71,21 @@ def parse_row(row_html: str):
     Returns:
         A dictionary containing the parsed information.
     """
+    civilian, military = extract_judges(row_html)
     return {
         'case_number': extract_case_number(row_html),
         'court': extract_court(row_html),
         'year': extract_year(row_html),
         'month': extract_month(row_html),
         'pdf_url': extract_pdf_url(row_html),
-        'judges': extract_judges(row_html),
+        'civilian_judge': civilian.lower(),
+        'military_judge': military.lower(),
     }
 
 
 def main():
     # Load Chandigarh.html into a string
-    with open('../web_pages/Chandigarh.html', 'r') as f:
+    with open('/home/laurence/dev/indian_army_tribunals/web_pages/Chandigarh.html', 'r') as f:
         html_doc = f.read()
 
     soup = BeautifulSoup(html_doc, 'html.parser')
@@ -103,6 +106,9 @@ def main():
     import pandas as pd
     df = pd.DataFrame(parsed_rows)
     print(df)
+
+    # Remove duplicate rows
+    df.drop_duplicates(inplace=True)
 
     # Save to CSV
     df.to_csv('structured_judgements/Chandigarh.csv', index=False)
