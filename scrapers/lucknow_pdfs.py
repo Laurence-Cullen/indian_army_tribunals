@@ -1,5 +1,6 @@
 import random
 import time
+import urllib.parse
 from pathlib import Path
 
 import pandas as pd
@@ -36,16 +37,20 @@ def scrape_pdfs(region: str):
     # row's 'pdf_url' column
     for index, row in region_data.iterrows():
         url = row['pdf_url']
-        filename = f"judgement_pdfs/{region}/{url.split('/')[-1]}.pdf"
+
+        pdf_filename = url.split('/')[-1]
+        decoded_filename = urllib.parse.unquote(pdf_filename)
+
+        save_path = f"judgement_pdfs/{region}/{decoded_filename}"
 
         # Check if the PDF already exists
-        if Path(filename).exists():
-            print('Skipping {} as it already exists'.format(filename))
+        if Path(save_path).exists():
+            print('Skipping {} as it already exists'.format(save_path))
             continue
 
         # Download the PDF
         response = requests.get(url)
-        with open(filename, 'wb') as f:
+        with open(save_path, 'wb') as f:
             f.write(response.content)
 
         # Wait for a random time between 0 and 0.2 seconds
