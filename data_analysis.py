@@ -11,6 +11,27 @@ def main():
 
     profile.to_file("Chandigarh_report.html")
 
+    names = chandigarh['military_judge'].values
+
+    # Remove duplicates
+    names = list(set(names))
+
+    # Save to txt file
+    with open('military_judges.txt', 'w') as f:
+        for name in names:
+            f.write(name + '\n')
+
+    # Civilian judges
+    names = chandigarh['civilian_judge'].values
+
+    # Remove duplicates
+    names = list(set(names))
+
+    # Save to txt file
+    with open('civilian_judges.txt', 'w') as f:
+        for name in names:
+            f.write(name + '\n')
+
 
 if __name__ == '__main__':
     main()

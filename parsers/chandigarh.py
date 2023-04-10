@@ -53,13 +53,52 @@ def extract_pdf_url(row_html: str):
     return match.group(1)
 
 
+def cleanup_judge_name(name: str):
+    name = name.lower()
+
+    # Strings to remove from the name
+    strip_list = [
+        'hon’ble',
+        'hon`ble',
+        'hon’ble',
+        "hon'ble",
+        '(member)',
+        'member',
+        '(administrative member)',
+        '(administrative )',
+        'administrative',
+        'administrative member',
+        '(j)',
+        '(judicial )',
+        'judicial',
+        'mr.',
+        'mr',
+        'justice',
+        '(retd.)',
+        '(a)',
+        '(retd)'
+    ]
+
+    for s in strip_list:
+        name = name.replace(s, '')
+
+    # Strip whitespace
+    name = name.strip()
+
+    # Strip trailing comma
+    if name.endswith(','):
+        name = name[:-1]
+
+    return name
+
+
 def extract_judges(row_html: str):
     regex = r'Judgement given by:\s*<span style="color:blue">([\w\s.,\'’()]+)</span>\s*&amp;\s*<span style="color:blue">([\w\s.,\'’()]+)</span>'
 
     match = re.search(regex, row_html)
     if not match:
         raise ValueError('Could not parse judges from row: {}'.format(row_html))
-    return match.group(1), match.group(2)
+    return cleanup_judge_name(match.group(1)), cleanup_judge_name(match.group(2))
 
 
 def parse_row(row_html: str):
