@@ -31,13 +31,13 @@ def main():
     # session = configure_proxies()
 
     # Load structured_judgements/Chandigarh.csv into DataFrame
-    chandigarh = pd.read_csv('structured_judgements/Chandigarh.csv')
+    chandigarh = pd.read_csv('../structured_judgements/chandigarh.csv')
 
     # Iterate over the DataFrame and download the judgement PDF from each
     # row's 'pdf_url' column
     for index, row in chandigarh.iterrows():
         url = row['pdf_url']
-        filename = f"judgement_pdfs/{row['case_number']}.pdf"
+        filename = f"judgement_pdfs/Chandigarh/{row['case_number']}.pdf"
 
         # Check if the PDF already exists
         if Path(filename).exists():

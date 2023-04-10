@@ -60,7 +60,6 @@ def cleanup_judge_name(name: str):
     strip_list = [
         'hon’ble',
         'hon`ble',
-        'hon’ble',
         "hon'ble",
         '(member)',
         'member',
